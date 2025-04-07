@@ -16,17 +16,17 @@ El repositorio ya mencionado, muestra como hacer un Reverse shell sencillo en do
 
 Debido a esto quise hacerlo más real y simulando que también poseía una máquina Windows diferente a la víctima, modifiqué el código de víctima.py para encapsular todo el bucle en una función, luego cree una app inofensiva a simple vista (una calculadora de raíz cuadrada en tkinter) y desde ahí importé el archivo "malicioso" e hice que se activara después de que el usuario cierre la interfaz gráfica, así finalmente convertí el script en un archivo .exe usando pyinstaller con el parámetro --noconsole para que una vez se cierre el programa en segundo plano e invisiblemente se ejecute la conexión remota.
 
-![víctima.py modificado](/victima.png)
+![víctima.py modificado](/ReverseShell/victima.png)
 
-![Calculadora "inofensiva"](/calculadora.png)
+![Calculadora "inofensiva"](/ReverseShell/calculadora.png)
 
-![Creación del ejecutable](/creacion.png)
+![Creación del ejecutable](/ReverseShell/creacion.png)
 
 ### Ejecución de comandos 
 
 En el celular desde Termux se debe tener el archivo atacante.py que apunta a la IP de la víctima, este se ejecuta y queda en escucha de cuando el usuario cierre la interfaz gráfica, cuando el script se ejecuta en segundo plano, el atacante puede empezar a ejecutar comandos:
 
-![Comando ejecutado desde Termux](/whoami.jpg)
+![Comando ejecutado desde Termux](/ReverseShell/whoami.jpg)
 
 Incluso después de todo esto, el antivirus no detecta nada porque como ya dije, la librería socket y subprocess de Python en si no hacen nada malicioso, ya que no estamos usando comandos como base64 que hagan una conexión remota o enviando payloads de metasploit.
 
@@ -38,21 +38,21 @@ Aunque no hagamos ninguna alerta para los antivirus, la conexión que realizamos
 
 Esto mostró varias IP de la red, entre ellas la del equipo víctima:
 
-![Resultado de escaneo](/scan.png)
+![Resultado de escaneo](/ReverseShell/scan.png)
 
 Ahí es donde nos damos cuenta de que algo anda mal, y por ello es que se puede recurrir a la herramienta Wireshark para ver qué posibles paquetes están circulando por este puerto. Para unos resultados más limpios añadimos un filtro solo para el puerto 5000.
 
-![Filtrar el puerto 5000](/puerto.png)
+![Filtrar el puerto 5000](/ReverseShell/puerto.png)
 
 Descubriendo como pasa un comando por la red y es capturado en texto plano a la vez que se captura la respuesta que la víctima envía:
 
-![Comando dir ejecutado desde el atacante y visualizado por Wireshark](/comando.png)
+![Comando dir ejecutado desde el atacante y visualizado por Wireshark](/ReverseShell/comando.png)
 
-![Respuesta de la víctima](/respuesta.png)
+![Respuesta de la víctima](/ReverseShell/respuesta.png)
 
 Con esto se puede afirmar de que se trata de un reverseshell, para quitarle la conexión usé mi herramienta [GuardKev402](https://github.com/kev402/GuardKev402) (no es propaganda a la app, es de código abierto y no tiene fines lucrativos) ya que con ella en Windows pude buscar el puerto 5000 y el nombre de la app que lo ejecutaba (la calculadora en tkinter) cerrando así el proceso y cortando la conexión con el atacante:
 
-![Encontrando el nombre del proceso, su ruta y el puerto abierto](/guardkev.png)
+![Encontrando el nombre del proceso, su ruta y el puerto abierto](/ReverseShell/guardkev.png)
  
 Finalmente escribí su nombre en la parte inferior, lo terminé y en Termux (el atacante) la conexión ya no respondía:
 
