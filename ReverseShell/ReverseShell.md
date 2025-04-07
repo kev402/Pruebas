@@ -56,7 +56,7 @@ Con esto se puede afirmar de que se trata de un reverseshell, para quitarle la c
  
 Finalmente escribí su nombre en la parte inferior, lo terminé y en Termux (el atacante) la conexión ya no respondía:
 
-![Corte del socket en Termux](/final.jpg)
+![Corte del socket en Termux](/ReverseShell/final.jpg)
 
 ## IMPORTANTE!
 
